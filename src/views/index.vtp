@@ -1,0 +1,17 @@
+@if(userData.roles.map(role => role.name).includes('Admin Kabupaten'))
+@component('vtp-dashboard-kabupaten')
+@elseif(userData.roles.map(role => role.name).includes('Desa'))
+@component('vtp-dashboard-desa')
+@elseif(userData.roles.map(role => role.name).includes('Pendamping'))
+@component('vtp-dashboard-pendamping')
+@elseif(userData.roles.map(role => role.name).includes('Kecamatan'))
+@component('vtp-dashboard-kecamatan')
+@elseif(userData.roles.map(role => role.name).includes('Dinsos'))
+@component('vtp-dashboard-dinsos')
+@elseif(userData.roles.map(role => role.name).includes('OPD'))
+@component('vtp-dashboard-opd')
+@elseif(userData.roles.map(role => role.name).includes('asesor'))
+@component('vtp-dashboard-asesor')
+@else
+@component('vtp-dashboard-default')
+@endif

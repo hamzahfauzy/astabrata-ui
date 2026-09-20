@@ -1,0 +1,393 @@
+import { CrudController } from "../CrudController.js";
+import view from '../../core/view.js'
+import { storageUrl } from "../../config/env.js";
+import stage from "../../config/stage.js";
+
+export default class ProfileController extends CrudController {
+
+    config = {
+        baseUrl: '/kpm/profiles',
+        state: {
+            data: [],
+            meta: {
+                from: 0,
+                last_page: 0,
+                page: 0,
+                per_page: 20,
+                to: 0,
+                total: 0
+            },
+            endpoint: '/kpm/profiles',
+            query: {
+                per_page: 20,
+                page: 1,
+                search: ''
+            },
+            loaded: false,
+            isLoading: true,
+        },
+        searchFields: [],
+        list: {
+            title: 'Profil KPM',
+            subtitle: 'Daftar Profil KPM',
+            createLabel: 'Input Data Profil KPM',
+            breadcrumbs: [],
+            columns: [
+                {label: 'No. KK', key: 'family_number'},
+                {label: 'NIK', key: 'personal_number'},
+                {label: 'Nama', key: 'name'},
+            ],
+            filters: [],
+            actions: [
+                {
+                    label: 'View', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    permissions: ['profiles.view','desa'],
+                },
+                {
+                    label: 'Edit', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id + '/edit' }, 
+                    class: '',
+                    permissions: ['profiles.edit'],
+                },
+                {
+                    label: 'Delete', type: 'button', 
+                    class: 'btn-delete text-danger',
+                    permissions: ['profiles.delete'],
+                },
+            ],
+            headerActions: [
+                {
+                    label: '<i class="bi bi-plus-lg me-2"></i> Input Data Profil KPM', route: '/kpm/profiles/create', 
+                    class: 'btn btn-primary', permissions: ['profiles.create','desa'],
+                    type: 'link'
+                }
+            ],
+        },
+        view: {
+            breadcrumbs: [
+                {label: 'Profil KPM', route: '/kpm/profiles'}
+            ],
+            title: 'Detail Profil KPM',
+            subtitle: 'Data Detail Profil KPM',
+            fields: [
+                {label: 'No. KK', key: 'family_number'},
+                {label: 'NIK', key: 'personal_number'},
+                {label: 'Nama', key: 'name'},
+            ],
+        },
+        create: {
+            title: 'Input Data Profil KPM',
+            subtitle: 'Isi form dibawah ini',
+            breadcrumbs: [
+                {label: 'Profil KPM', route: '/kpm/profiles'}
+            ],
+            fields: [
+                {name: 'profile[family_number]', label: 'No. KK', type: 'number', required: true},
+                {name: 'profile[personal_number]', label: 'NIK', type: 'number', required: true},
+                {name: 'profile[name]', label: 'Nama', type: 'text', required: true},
+            ],
+        },
+        edit: {
+            title: 'Edit Profil KPM',
+            subtitle: 'Isi form untuk mengedit data Profil KPM',
+            breadcrumbs: [
+                {label: 'Profil KPM', route: '/kpm/profiles'}
+            ],
+            fields: [
+                {name: 'family_number', label: 'No. KK', type: 'number', required: true},
+                {name: 'personal_number', label: 'NIK', type: 'number', required: true},
+                {name: 'name', label: 'Nama', type: 'text', required: true},
+            ],
+        },
+    }
+
+    async create(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+        }
+
+        ctx.onMounted(() => {
+
+            ctx.loadScript('/assets/js/rab.js')
+            ctx.loadScript('/assets/js/penghasilan.js')
+
+            document.querySelector('select[name="periods[region]"]').addEventListener('change', async e => {
+                const region = e.target.value
+                const villages = await ctx.http.get('/villages/find-by-region-name/' + region)
+                const selectMenu = document.querySelector('select[name="periods[village]"]');
+
+                // Clear the dropdown
+                selectMenu.innerHTML = '';
+
+                // Loop through the data and append each option
+                villages.data.forEach(item => {
+                    selectMenu.add(new Option(item.name, item.name));
+                });
+            })
+
+            document.querySelector('select[name="periods[has_bank_account]"]').addEventListener('change', async e => {
+                const has_bank_account = e.target.value
+                const bank_name = document.querySelector('[name="periods[bank_name]"]').closest('.form-group')
+                const bank_account_name = document.querySelector('[name="periods[bank_account_name]"]').closest('.form-group')
+                const bank_account_number = document.querySelector('[name="periods[bank_account_number]"]').closest('.form-group')
+                if(has_bank_account == 'Ya')
+                {
+                    bank_name.classList.remove('d-none')
+                    bank_account_name.classList.remove('d-none')
+                    bank_account_number.classList.remove('d-none')
+                }
+                else
+                {
+                    bank_name.classList.add('d-none')
+                    bank_account_name.classList.add('d-none')
+                    bank_account_number.classList.add('d-none')
+                }
+            })
+
+            document.querySelector('[name=assesment_geo_tag]').addEventListener('click', e => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+
+                            document.querySelector('[name="assessments[geo_tag]"]').value = `${latitude},${longitude}`
+                            
+                            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                        },
+                        (error) => {
+                            console.error(`Error getting location: ${error.message}`);
+                        }
+                );
+                } else {
+                    console.error("Geolocation is not supported by this browser.");
+                }
+            })
+
+
+            ctx.on('#crud-form', 'submit', async e => {
+                e.preventDefault()
+
+                const formData = new FormData(e.currentTarget)
+
+                await ctx.http.post(ctx.state.endpoint, formData)
+
+                ctx.flash("success", "Data created.");
+
+                ctx.redirect(this.config.baseUrl)
+
+                return false;
+            })
+        })
+
+        const otherForm = {
+            periods: [
+                {name: 'periods[address]', label: 'Alamat', type: 'textarea', required: true},
+                {name: 'periods[phone]', label: 'No. HP', type: 'number', required: true},
+                {name: 'periods[program_type]', label: 'Jenis Program', type: 'text', required: true},
+                {
+                    name: 'periods[region]', label: 'Kecamatan', 
+                    type: 'select',
+                    options: [],
+                    ajax: {
+                        response: {value: 'name', label: 'name'},
+                        url: '/regions/get',
+                    },
+                    required: true
+                },
+                {
+                    name: 'periods[village]', label: 'Desa / Kelurahan', 
+                    type: 'select',
+                    options: [],
+                    required: true
+                },
+                {
+                    name: 'periods[education]', label: 'Pendidikan Terakhir', 
+                    type: 'select',
+                    options: [],
+                    ajax: {
+                        response: {value: 'name', label: 'name'},
+                        url: '/educations/get',
+                    },
+                    required: true
+                },
+                {name: 'periods[family_dependant_number]', label: 'Jumlah Tanggungan dalam Keluarga', type: 'number', required: true, attr: {min:0}},
+                {name: 'periods[social_assistance_type]', label: 'Jenis Bansos yang Diterima dari Pemerintah dan Non Pemerintah', type: 'text', required: true},
+                {name: 'periods[business_assistance_type]', label: 'Jenis Bantuan Usaha yang pernah atau sedang diterima', type: 'text', required: true},
+                {
+                    name: 'periods[has_bank_account]', label: 'Memiliki Rekening Tabungan Bank Non Bansos', 
+                    type: 'select',
+                    options: [
+                        {label: 'Ya', value: 'Ya'},
+                        {label: 'Tidak', value: 'Tidak'},
+                    ],
+                    required: true
+                },
+                {name: 'periods[bank_name]', label: 'Nama Bank', type: 'text', attr: { wrapperClassName: 'd-none' }},
+                {name: 'periods[bank_account_name]', label: 'Nama Pemilik Rekening', type: 'text', attr: { wrapperClassName: 'd-none' }},
+                {name: 'periods[bank_account_number]', label: 'No. Rekening', type: 'text', attr: { wrapperClassName: 'd-none' }},
+            ],
+
+            business: [
+                {
+                    name: 'business[is_active]', label: 'Memiliki Usaha yang Berjalan', 
+                    type: 'select',
+                    options: [
+                        {label: 'Ya', value: 'Ya'},
+                        {label: 'Tidak', value: 'Tidak'},
+                    ],
+                    required: true
+                },
+                {name: 'business[cluster]', label: 'Klaster Usaha', type: 'text'},
+                {name: 'business[product]', label: 'Produk Usaha', type: 'text'},
+                {name: 'business[manager]', label: 'Pengelola Usaha', type: 'text'},
+                {
+                    name: 'business[is_location_in_home]', label: 'Lokasi Usaha jadi Satu denga Rumah', 
+                    type: 'select',
+                    options: [
+                        {label: 'Ya', value: 'Ya'},
+                        {label: 'Tidak', value: 'Tidak'},
+                    ],
+                },
+                {name: 'business[address]', label: 'Lokasi Usaha', type: 'textarea'},
+                {name: 'business[village]', label: 'Desa / Kelurahan', type: 'text'},
+                {name: 'business[region]', label: 'Kecamatan', type: 'text'},
+                {name: 'business[regency]', label: 'Kabupaten', type: 'text'},
+                {name: 'business[province]', label: 'Provinsi', type: 'text'},
+                {name: 'business[start_month]', label: 'Bulan dan Tahun mulai Usaha', type: 'month'},
+                {name: 'business[surface_area]', label: 'Luas Area', type: 'text'},
+                {name: 'business[building_area]', label: 'Luas Bangunan', type: 'text'},
+                {name: 'business[electricity]', label: 'Daya Listrik', type: 'text'},
+                {
+                    name: 'business[has_employee]', label: 'Memiliki Karyawan yang Dibayar Rutin', 
+                    type: 'select',
+                    options: [
+                        {label: 'Ya', value: 'Ya'},
+                        {label: 'Tidak', value: 'Tidak'},
+                    ],
+                },
+                {name: 'business[num_of_employee]', label: 'Jumlah Pekerja', type: 'number'},
+                {name: 'business[daily_production]', label: 'Kemampuan Produksi Harian', type: 'text'},
+                {
+                    name: 'business[legal]', label: 'Izin / Sertifikat Usaha', 
+                    type: 'select',
+                    options: [
+                        {label: 'Sudah Memiliki Izin', value: 'Sudah Memiliki Izin'},
+                        {label: 'Tidak / Belum Memiliki Izin', value: 'Tidak / Belum Memiliki Izin'},
+                    ],
+                },
+            ],
+            assessments: [
+                {name: 'assessments[assessment_person]', label: 'Bertemu Dengan', type: 'text'},
+                {name: 'assessments[geo_tag]', label: 'Geotag', type: 'geotag', btnName: 'assesment_geo_tag'},
+                {name: 'assessments[address]', label: 'Alamat', type: 'textarea'},
+            ],
+            purposes: [
+                {name: 'purposes[issue]', label: 'Permasalahan', type: 'textarea'},
+                {name: 'purposes[goals]', label: 'Tujuan Permohonan', type: 'textarea'},
+                {name: 'purposes[training_needs]', label: 'Kebutuhan Pelatihan', type: 'textarea'},
+            ],
+            documents: [
+                {name: 'documents[identity_card]', label: 'KTP', type: 'file'},
+                {name: 'documents[family_card]', label: 'KK', type: 'file'},
+                {name: 'documents[home_image]', label: 'Rumah', type: 'file'},
+            ]
+        }
+
+        return await view.render('pages/kpm/profile/create', {...ctx.state, pageAttr: this.config.create, otherForm, baseUrl: this.config.baseUrl, data: {}})
+    }
+
+    async show(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+        }
+
+        ctx.onMounted(() => {
+
+            ctx.on('#stage-form', 'submit', async e => {
+                e.preventDefault()
+
+                const formData = new FormData(e.currentTarget)
+
+                await ctx.http.post(ctx.state.endpoint + '/' + ctx.params.id + '/stage', formData)
+
+                ctx.flash("success", "Data created.");
+
+                ctx.redirect(this.config.baseUrl)
+
+                return false;
+            })
+        })
+
+        const response = await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id)
+
+        const otherView = {
+            periods: [
+                {key: 'period_address', label: 'Alamat'},
+                {key: 'period_phone', label: 'No. HP'},
+                {key: 'period_program_type', label: 'Jenis Program'},
+                {key: 'period_region', label: 'Kecamatan'},
+                {key: 'period_village', label: 'Desa / Kelurahan'},
+                {key: 'period_education', label: 'Pendidikan Terakhir'},
+                {key: 'period_family_dependent_number', label: 'Jumlah Tanggungan dalam Keluarga'},
+                {key: 'period_social_assistance_type', label: 'Jenis Bansos yang Diterima dari Pemerintah dan Non Pemerintah'},
+                {key: 'period_business_assistance_type', label: 'Jenis Bantuan Usaha yang pernah atau sedang diterima'},
+                {key: 'period_has_bank_account', label: 'Memiliki Rekening Tabungan Bank Non Bansos'},
+                {key: 'period_bank_name', label: 'Nama Bank'},
+                {key: 'period_bank_account_name', label: 'Nama Pemilik Rekening'},
+                {key: 'period_bank_account_number', label: 'No. Rekening'},
+            ],
+
+            business: [
+                {key: 'business_is_active', label: 'Memiliki Usaha yang Berjalan'},
+                {key: 'business_cluster', label: 'Klaster Usaha'},
+                {key: 'business_product', label: 'Produk Usaha'},
+                {key: 'business_manager', label: 'Pengelola Usaha'},
+                {key: 'business_is_location_in_home', label: 'Lokasi Usaha jadi Satu denga Rumah'},
+                {key: 'business_address', label: 'Lokasi Usaha'},
+                {key: 'business_village', label: 'Desa / Kelurahan'},
+                {key: 'business_region', label: 'Kecamatan'},
+                {key: 'business_regency', label: 'Kabupaten'},
+                {key: 'business_province', label: 'Provinsi'},
+                {key: 'business_start_month', label: 'Bulan dan Tahun mulai Usaha'},
+                {key: 'business_surface_area', label: 'Luas Area'},
+                {key: 'business_building_area', label: 'Luas Bangunan'},
+                {key: 'business_electricity', label: 'Daya Listrik'},
+                {key: 'business_has_employee', label: 'Memiliki Karyawan yang Dibayar Rutin'},
+                {key: 'business_num_of_employee', label: 'Jumlah Pekerja'},
+                {key: 'business_daily_production', label: 'Kemampuan Produksi Harian'},
+                {key: 'business_legal', label: 'Izin / Sertifikat Usaha'}
+            ],
+            assessments: [
+                {key: 'assessment_assessor_name', label: 'Petugas Asesmen'},
+                {key: 'assessment_assessment_person', label: 'Bertemu Dengan'},
+                {key: 'assessment_geo_tag',label: 'Geotag'},
+                {key: 'assessment_address',label: 'Alamat'}
+            ],
+            purposes: [
+                {key: 'purposes_issue', label: 'Permasalahan'},
+                {key: 'purposes_goals', label: 'Tujuan Permohonan'},
+                {key: 'purposes_training_needs', label: 'Kebutuhan Pelatihan'},
+            ],
+            documents: [
+                {key: 'documents_identity_card', label: 'KTP'},
+                {key: 'documents_family_card', label: 'KK'},
+                {key: 'documents_home_image', label: 'Rumah'},
+            ]
+        }
+
+        const docs = {identity_card: 'KTP', family_card: 'KK', home_image: 'Rumah'}
+
+        const activeStage = stage.stages.find(stage => stage.id == response.data.period_stage)
+
+        return await view.render('pages/kpm/profile/detail', {...ctx.state, pageAttr: this.config.view, otherView, baseUrl: this.config.baseUrl, data: response.data, docs, storageUrl, activeStage})
+
+    }
+
+}
