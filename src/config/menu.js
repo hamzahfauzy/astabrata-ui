@@ -78,8 +78,8 @@ export default [
         name:'profile',
         icon: 'bi bi-calendar-week',
         permissions: ['pendamping'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-schedules',
+        activeState: '/kpm/profile-schedules',
         children: []
     },
     {
@@ -87,8 +87,8 @@ export default [
         name:'profile',
         icon: 'bi bi-arrow-return-left',
         permissions: ['pendamping'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-return',
+        activeState: '/kpm/profile-return',
         children: []
     },
     {
@@ -96,8 +96,8 @@ export default [
         name:'profile',
         icon: 'bi bi-clock-history',
         permissions: ['pendamping'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-verification-history',
+        activeState: '/kpm/profile-verification-history',
         children: []
     },
 
@@ -116,8 +116,8 @@ export default [
         name:'profile',
         icon: 'bi bi-clipboard-check',
         permissions: ['kecamatan'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-administration',
+        activeState: '/kpm/profile-administration',
         children: []
     },
     {
@@ -125,8 +125,8 @@ export default [
         name:'profile',
         icon: 'bi bi-people-fill',
         permissions: ['kecamatan'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-nominative',
+        activeState: '/kpm/profile-nominative',
         children: []
     },
     {
@@ -134,8 +134,8 @@ export default [
         name:'profile',
         icon: 'bi bi-envelope-paper',
         permissions: ['kecamatan'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/letters',
+        activeState: '/kpm/letters',
         children: []
     },
     {
@@ -143,8 +143,8 @@ export default [
         name:'profile',
         icon: 'bi bi-clock-history',
         permissions: ['kecamatan'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-history',
+        activeState: '/kpm/profile-history',
         children: []
     },
 
@@ -163,51 +163,69 @@ export default [
         name:'profile',
         icon: 'bi bi-clipboard-check',
         permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-check',
+        activeState: '/kpm/profile-check',
         children: []
     },
     {
         label: 'Daftar Sasaran',
         name:'profile',
         icon: 'bi bi-people-fill',
-        permissions: ['dinisos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/kpm/profile-target',
+        activeState: '/kpm/profile-target',
+        children: []
+    },
+    {
+        label: 'Asesmen',
+        name:'profile',
+        icon: 'bi bi-people-fill',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/kpm/profile-assessment',
+        activeState: '/kpm/profile-assessment',
+        children: []
+    },
+    {
+        label: 'Baseline',
+        name:'profile',
+        icon: 'bi bi-people-fill',
+        permissions: ['asesor','kabupaten'],
+        route: '/kpm/profile-baseline',
+        activeState: '/kpm/profile-baseline',
         children: []
     },
     {
         label: 'RII',
         name:'profile',
         icon: 'bi bi-people-fill',
-        permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/rii',
+        activeState: '/rii',
         children: []
     },
     {
-        label: 'Rujukan Intervensi',
+        label: 'Rujukan dan Intervensi',
         name:'profile',
         icon: 'bi bi-people-fill',
-        permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/rujukan-intervensi',
+        activeState: '/rujukan-intervensi',
         children: []
     },
     {
         label: 'Monitoring dan Evaluasi',
         name:'profile-document',
         icon: 'bi bi-files',
-        permissions: ['monev'],
+        permissions: ['dinsos','asesor','kabupaten'],
         route: '/monev',
         activeState: '/monev',
         children: []
     },
     {
-        label: 'Monitoring dan Evaluasi',
+        label: 'Penilaian Ulang',
         name:'profile-document',
         icon: 'bi bi-files',
-        permissions: ['dinsos'],
+        permissions: ['dinsos','kabupaten'],
         route: '/penilaian-ulang',
         activeState: '/penilaian-ulang',
         children: []
@@ -216,27 +234,27 @@ export default [
         label: 'Graduasi',
         name:'profile-document',
         icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/penilaian-ulang',
-        activeState: '/penilaian-ulang',
-        children: []
-    },
-    {
-        label: 'Monitoring dan Evaluasi',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['monev'],
-        route: '/monev',
-        activeState: '/monev',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/graduasi',
+        activeState: '/graduasi',
         children: []
     },
     {
         label: 'UEP',
         name:'profile-document',
         icon: 'bi bi-files',
-        permissions: ['penilaian-ulang'],
-        route: '/penilaian-ulang',
-        activeState: '/penilaian-ulang',
+        permissions: ['dinsos','asesor','kabupaten'],
+        route: '/uep',
+        activeState: '/uep',
+        children: []
+    },
+    {
+        label: 'Pasca Graduasi',
+        name:'profile-document',
+        icon: 'bi bi-files',
+        permissions: ['dinsos','kabupaten'],
+        route: '/pasca-graduasi',
+        activeState: '/pasca-graduasi',
         children: []
     },
 
@@ -288,76 +306,52 @@ export default [
     },
 
 
-    {
-        label: 'Baseline',
-        name:'profile',
-        icon: 'bi bi-people-fill',
-        permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
-        children: []
-    },
-    {
-        label: 'RII',
-        name:'profile',
-        icon: 'bi bi-people-fill',
-        permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
-        children: []
-    },
-    {
-        label: 'Intervensi OPD',
-        name:'profile',
-        icon: 'bi bi-people-fill',
-        permissions: ['dinsos'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
-        children: []
-    },
-    {
-        label: 'Monitoring dan Evaluasi',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/monev',
-        activeState: '/monev',
-        children: []
-    },
-    {
-        label: 'Penilaian Ulang',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/penilaian-ulang',
-        activeState: '/penilaian-ulang',
-        children: []
-    },
-    {
-        label: 'Graduasi',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/graduasi',
-        activeState: '/graduasi',
-        children: []
-    },
-    {
-        label: 'UEP',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/uep',
-        activeState: '/uep',
-        children: []
-    },
-    {
-        label: 'Pasca Graduasi',
-        name:'profile-document',
-        icon: 'bi bi-files',
-        permissions: ['dinsos'],
-        route: '/pasca-graduasi',
-        activeState: '/pasca-graduasi',
-        children: []
-    },
+    
+    // {
+    //     label: 'RII',
+    //     name:'profile',
+    //     icon: 'bi bi-people-fill',
+    //     permissions: ['dinsos'],
+    //     route: '/kpm/profiles',
+    //     activeState: '/kpm/profiles',
+    //     children: []
+    // },
+    // {
+    //     label: 'Intervensi OPD',
+    //     name:'profile',
+    //     icon: 'bi bi-people-fill',
+    //     permissions: ['dinsos'],
+    //     route: '/kpm/profiles',
+    //     activeState: '/kpm/profiles',
+    //     children: []
+    // },
+    // {
+    //     label: 'Monitoring dan Evaluasi',
+    //     name:'profile-document',
+    //     icon: 'bi bi-files',
+    //     permissions: ['dinsos'],
+    //     route: '/monev',
+    //     activeState: '/monev',
+    //     children: []
+    // },
+    // {
+    //     label: 'Penilaian Ulang',
+    //     name:'profile-document',
+    //     icon: 'bi bi-files',
+    //     permissions: ['dinsos'],
+    //     route: '/penilaian-ulang',
+    //     activeState: '/penilaian-ulang',
+    //     children: []
+    // },
+    // {
+    //     label: 'Graduasi',
+    //     name:'profile-document',
+    //     icon: 'bi bi-files',
+    //     permissions: ['dinsos'],
+    //     route: '/graduasi',
+    //     activeState: '/graduasi',
+    //     children: []
+    // },
+    // {
+    
 ]

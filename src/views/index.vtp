@@ -10,7 +10,7 @@
 @component('vtp-dashboard-dinsos')
 @elseif(userData.roles.map(role => role.name).includes('OPD'))
 @component('vtp-dashboard-opd')
-@elseif(userData.roles.map(role => role.name).includes('asesor'))
+@elseif(userData.roles.map(role => role.name).includes('Asesor'))
 @component('vtp-dashboard-asesor')
 @else
 @component('vtp-dashboard-default')

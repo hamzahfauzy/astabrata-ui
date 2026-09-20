@@ -46,6 +46,24 @@ export default class ProfileController extends CrudController {
                     permissions: ['profiles.view','desa'],
                 },
                 {
+                    label: 'Periksa Data', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    permissions: ['pendamping'],
+                },
+                {
+                    label: 'Pemeriksaan Administrasi', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    permissions: ['kecamatan'],
+                },
+                {
+                    label: 'Telaah Data', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    permissions: ['dinsos'],
+                },
+                {
                     label: 'Edit', type: 'link', 
                     url: row => { return '/kpm/profiles/' + row.id + '/edit' }, 
                     class: '',

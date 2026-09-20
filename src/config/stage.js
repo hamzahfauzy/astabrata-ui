@@ -4,7 +4,7 @@ export default {
   "stages": [
     {
       "id": "stage_1",
-      "permission": "kpm.stage_1",
+      "permission": "pendamping",
       "form": {
         "sections": [
           {
@@ -87,7 +87,7 @@ export default {
 
     {
       "id": "stage_2",
-      "permission": "kpm.stage_2",
+      "permission": "kecamatan",
       "form": {
         "sections": [
           {
@@ -159,7 +159,7 @@ export default {
 
     {
       "id": "stage_3",
-      "permission": "kpm.stage_3",
+      "permission": "dinsos",
       "form": {
         "sections": [
           {
