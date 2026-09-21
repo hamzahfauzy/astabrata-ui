@@ -136,6 +136,26 @@ Route.add('/kpm/profiles', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Profil KPM'
 }, ['Kpm/ProfileController','index'])
 
+Route.add('/kpm/profile-revision', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Perbaikan Data'
+}, ['Kpm/ProfileController','revision'])
+
+Route.add('/kpm/profile-schedules', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Jadwal Kunjungan'
+}, ['Kpm/ProfileController','scheduled'])
+
+Route.add('/kpm/profile-return', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Data Dikembalikan'
+}, ['Kpm/ProfileController','returned'])
+
+Route.add('/kpm/profile-administration', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Pemeriksaan Berkas Administrasi'
+}, ['Kpm/ProfileController','administrations'])
+
+Route.add('/kpm/profile-nominatif', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Pemeriksaan Berkas Administrasi'
+}, ['Kpm/ProfileController','nominatif'])
+
 Route.add('/kpm/profile-documents', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Dokumen'
 }, ['Kpm/ProfileDocumentController','index'])

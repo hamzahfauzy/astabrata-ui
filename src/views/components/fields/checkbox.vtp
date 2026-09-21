@@ -4,7 +4,7 @@
     <div class="d-flex flex-wrap gap-2">
         @for(const option of field.options)
         <div class="form-check">
-            <input id="{{field.name + '-' + option.id}}" name="{{field.name}}[]" {{data && data[field.name] && data[field.name].includes(option.value) ? 'checked=""' : ''}} value="{{option.value}}" type="checkbox" class="form-check-input">
+            <input id="{{field.name + '-' + option.id}}" name="{{field.name}}[]" {{data && data[field.key] && data[field.key].includes(option.value) ? 'checked=""' : ''}} value="{{option.value}}" type="checkbox" class="form-check-input">
             <label for="{{field.name + '-' + option.id}}" class="form-check-label">{{ option.label }}</label>
         </div>
         @endfor

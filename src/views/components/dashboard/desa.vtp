@@ -404,7 +404,7 @@
                                     <span class="status-badge badge-warning-soft">Menunggu Verifikasi</span>
                                     @elseif(profile.status == 'Draft')
                                     <span class="status-badge badge-info-soft">Draf</span>
-                                    @elseif(profile.status == 'Revisi')
+                                    @elseif(profile.status == 'Belum Sesuai')
                                     <span class="status-badge badge-danger-soft">Perlu Perbaikan</span>
                                     @endif
                                     @else
@@ -425,7 +425,7 @@
                                     <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-outline">Lihat</a>
                                     @elseif(profile.status == 'Draft')
                                     <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-blue">Lengkapi</a>
-                                    @elseif(profile.status == 'Revisi')
+                                    @elseif(profile.status == 'Belum Sesuai')
                                     <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-red">Perbaiki</a>
                                     @endif
                                     @else
@@ -434,6 +434,16 @@
                                 </td>
                             </tr>
                             @endfor
+
+                            @if(data.profiles.length == 0)
+                            <tr>
+                                <td colspan="6">
+                                    <div class="p-3 text-center">
+                                        <i>Tidak ada data</i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>

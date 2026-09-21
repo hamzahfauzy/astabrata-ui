@@ -4,7 +4,7 @@
     <div class="d-flex flex-wrap gap-2">
         @for(const [index, option] of field.options.entries())
         <div class="form-check">
-            <input id="{{field.name + index}}" name="{{field.name}}" {{data && data[field.name] && data[field.name].includes(option) ? 'checked=""' : ''}} value="{{option}}" type="radio" class="form-check-input">
+            <input id="{{field.name + index}}" name="{{field.name}}" {{data && data[field.key] && data[field.key].includes(option) ? 'checked=""' : ''}} value="{{option}}" type="radio" class="form-check-input">
             <label for="{{field.name + index}}" class="form-check-label">{{ option }}</label>
         </div>
         @endfor

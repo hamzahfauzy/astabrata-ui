@@ -3,7 +3,7 @@
     <select name="{{field.name}}" id="" class="form-select">
         <option>Choose</option>
         @for(const option of field.options)
-        <option value="{{option.value}}" {{data[field.name] == option.value ? 'selected=""' : ''}}>{{option.label}}</option>
+        <option value="{{option.value}}" {{data[field.key] == option.value ? 'selected=""' : ''}}>{{option.label}}</option>
         @endfor
     </select>
 </div>

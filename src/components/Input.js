@@ -20,6 +20,8 @@ export default async function (props, ctx) {
         })
     }
 
+    props.field.key = props.field.keyValue ?? props.field.name
+
     return view.render('components/fields/' + props.field.type, {
         field: props.field,
         data: props.data

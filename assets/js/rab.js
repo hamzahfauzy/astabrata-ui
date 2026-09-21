@@ -75,7 +75,7 @@
         }
 
         state.items.forEach((item, itemIdx) => {
-            const rowTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
+            const rowTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
             const itemRow = document.createElement('tr');
             
             itemRow.innerHTML = `
@@ -84,7 +84,7 @@
                     <input type="text" name="budgets[description][]" class="form-control input-plain" value="${escapeHtml(item.description)}" placeholder="Uraian...">
                 </td>
                 <td>
-                    <input type="number"  name="budgets[qty][]" step="any" min="0" class="form-control input-plain text-end" value="${item.quantity}" oninput="rab.updateItem(${itemIdx}, 'quantity', this.value)">
+                    <input type="number"  name="budgets[qty][]" step="any" min="0" class="form-control input-plain text-end" value="${item.qty}" oninput="rab.updateItem(${itemIdx}, 'quantity', this.value)">
                 </td>
                 <td>
                     <input type="text"  name="budgets[unit][]" class="form-control input-plain text-center" value="${escapeHtml(item.unit)}" placeholder="m2 / pcs">
@@ -92,7 +92,7 @@
                 <td>
                     <div class="input-group currency-input-group">
                         <span class="input-group-text">Rp</span>
-                        <input type="text" class="form-control input-plain text-end" name="budgets[price][]" value="${formatNumberWithDots(item.price.toString())}" oninput="rab.handlePriceInput(${itemIdx}, this)">
+                        <input type="text" class="form-control input-plain text-end" name="budgets[price][]" value="${formatNumberWithDots(Math.round(item.price).toString())}" oninput="rab.handlePriceInput(${itemIdx}, this)">
                     </div>
                 </td>
                 <td class="text-end fw-semibold text-dark">
@@ -125,7 +125,7 @@
         calculateTotals();
         
         const item = state.items[itemIdx];
-        const rowTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
+        const rowTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
         
         const tr = inputEl.closest('tr');
         if (tr && tr.children[5]) {
@@ -138,7 +138,7 @@
      */
     function updateItem(itemIdx, field, value) {
         if (field === 'quantity') {
-            state.items[itemIdx].quantity = parseFloat(value) || 0;
+            state.items[itemIdx].qty = parseFloat(value) || 0;
         } else {
             state.items[itemIdx][field] = value;
         }
@@ -147,7 +147,7 @@
             const item = state.items[itemIdx];
             const tr = event ? event.target.closest('tr') : null;
             if (tr && tr.children[5]) {
-                tr.children[5].textContent = formatRupiah((parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0));
+                tr.children[5].textContent = formatRupiah((parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0));
             }
         }
 
@@ -157,7 +157,7 @@
     function addItem() {
         state.items.push({
             description: "",
-            quantity: 1,
+            qty: 1,
             unit: "m2",
             price: 0
         });
@@ -177,7 +177,7 @@
         let subtotal = 0;
 
         state.items.forEach(item => {
-            const rowTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.price) || 0);
+            const rowTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
             subtotal += rowTotal;
         });
 
@@ -226,11 +226,17 @@
         toast.show();
     }
 
+    function loadFromData(data){
+        state.items = data
+        renderTable();
+    }
+
     window.rab = {
         addItem,
         handlePriceInput,
         updateItem,
-        deleteItem
+        deleteItem,
+        loadFromData,
     }
 
     // Initialize App

@@ -248,7 +248,7 @@
             <div class="stat-card">
                 <div>
                     <div class="text-muted small fw-medium mb-1">Perlu Diverifikasi</div>
-                    <div class="fs-2 fw-bold text-dark">7</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileWait}}</div>
                 </div>
                 <div class="stat-icon blue">
                     <i class="bi bi-file-earmark-text-fill"></i>
@@ -260,7 +260,7 @@
             <div class="stat-card">
                 <div>
                     <div class="text-muted small fw-medium mb-1">Jadwal Kunjungan</div>
-                    <div class="fs-2 fw-bold text-dark">4</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileScheduled}}</div>
                 </div>
                 <div class="stat-icon blue">
                     <i class="bi bi-calendar-event-fill"></i>
@@ -272,7 +272,7 @@
             <div class="stat-card">
                 <div>
                     <div class="text-muted small fw-medium mb-1">Dikembalikan</div>
-                    <div class="fs-2 fw-bold text-dark">2</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileReturn}}</div>
                 </div>
                 <div class="stat-icon red">
                     <i class="bi bi-arrow-counterclockwise"></i>
@@ -284,7 +284,7 @@
             <div class="stat-card">
                 <div>
                     <div class="text-muted small fw-medium mb-1">Terverifikasi</div>
-                    <div class="fs-2 fw-bold text-dark">15</div>
+                    <div class="fs-2 fw-bold text-dark">{{data.totalProfileVerified}}</div>
                 </div>
                 <div class="stat-icon green">
                     <i class="bi bi-check-circle-fill"></i>
@@ -330,17 +330,11 @@
                 
                 <!-- Filter & Search Bar -->
                 <div class="row g-2 mb-3">
-                    <div class="col-12 col-md-8 col-lg-9">
+                    <div class="col-12">
                         <div class="search-box">
                             <i class="bi bi-search"></i>
                             <input type="text" class="form-control" placeholder="Cari nama, NIK, ID KPM, atau Desa/Kelurahan">
                         </div>
-                    </div>
-                    <div class="col-12 col-md-4 col-lg-3">
-                        <button class="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center rounded-3 bg-white text-secondary text-capitalize" style="font-size: 0.85rem; padding: 7px 12px;" type="button">
-                            <span><i class="bi bi-funnel me-1"></i> Semua Status</span>
-                            <i class="bi bi-chevron-down"></i>
-                        </button>
                     </div>
                 </div>
 
@@ -353,96 +347,58 @@
                                 <th>Nama KPM</th>
                                 <th>Desa/Kelurahan</th>
                                 <th>Tanggal Diajukan</th>
-                                <th>Kelengkapan</th>
+                                <!-- <th>Kelengkapan</th> -->
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Row 1 -->
+                            @for(const profile of data.profiles)
                             <tr>
-                                <td class="fw-medium">AST-DS-0001</td>
+                                <td class="fw-medium">AST-DS-{{profile.id}}</td>
                                 <td>
-                                    <div class="fw-bold">SUGOYONO</div>
-                                    <div class="nik-sub">NIK: 12*******7890</div>
+                                    <div class="fw-bold">{{profile.name}}</div>
+                                    <div class="nik-sub">NIK: {{profile.personal_number}}</div>
                                 </td>
-                                <td>SIUMBUT UMBUT</td>
+                                <td>{{profile.village}}</td>
                                 <td>18 Sep 2026</td>
-                                <td>
+                                <!-- <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="progress progress-custom w-100">
                                             <div class="progress-bar progress-bar-green" style="width: 100%"></div>
                                         </div>
                                         <span class="fw-semibold text-secondary" style="font-size: 0.8rem;">100%</span>
                                     </div>
-                                </td>
+                                </td> -->
                                 <td>
+                                    @if(profile.status == 'Menunggu Verifikasi')
                                     <span class="badge-status badge-blue">Perlu Diverifikasi</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-action-primary text-nowrap">Buka Verifikasi</button>
-                                </td>
-                            </tr>
-                            <!-- Row 2 -->
-                            <tr>
-                                <td class="fw-medium">AST-DS-0004</td>
-                                <td>
-                                    <div class="fw-bold">NURAINI</div>
-                                    <div class="nik-sub">NIK: 14*******3210</div>
-                                </td>
-                                <td>SEI RENGGAS</td>
-                                <td>18 Sep 2026</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="progress progress-custom w-100">
-                                            <div class="progress-bar progress-bar-green" style="width: 100%"></div>
-                                        </div>
-                                        <span class="fw-semibold text-secondary" style="font-size: 0.8rem;">100%</span>
-                                    </div>
-                                </td>
-                                <td>
+                                    @elseif(profile.status == 'Jadwalkan Kunjungan')
                                     <span class="badge-status badge-yellow">Jadwal Kunjungan</span>
+                                    @endif
                                 </td>
                                 <td>
-                                    <button class="btn btn-action-outline text-nowrap">Lihat Jadwal</button>
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-primary text-nowrap">Buka Verifikasi</a>
+                                    @elseif(profile.status == 'Jadwalkan Kunjungan')
+                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-primary text-nowrap">Lihat Jadwal</a>
+                                    @endif
                                 </td>
                             </tr>
-                            <!-- Row 3 -->
+                            @endfor
+
+                            @if(data.profiles.length == 0)
                             <tr>
-                                <td class="fw-medium">AST-DS-0005</td>
-                                <td>
-                                    <div class="fw-bold">SUPARDI</div>
-                                    <div class="nik-sub">NIK: 16*******9876</div>
-                                </td>
-                                <td>SIDOMULYO</td>
-                                <td>17 Sep 2026</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="progress progress-custom w-100">
-                                            <div class="progress-bar progress-bar-green" style="width: 95%"></div>
-                                        </div>
-                                        <span class="fw-semibold text-secondary" style="font-size: 0.8rem;">95%</span>
+                                <td colspan="6">
+                                    <div class="p-3 text-center">
+                                        <i>Tidak ada data</i>
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="badge-status badge-purple">Periksa Bukti</span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-action-primary text-nowrap">Buka Verifikasi</button>
-                                </td>
                             </tr>
+                            @endif
                         </tbody>
                     </table>
-                </div>
-
-                <!-- Table Footer & Pagination -->
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-3 pt-2 border-top">
-                    <span class="text-muted small mb-2 mb-sm-0">Menampilkan 1 - 3 dari 3 data</span>
-                    <div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-outline-secondary px-2" disabled><i class="bi bi-chevron-left"></i></button>
-                        <button type="button" class="btn btn-primary px-3 fw-bold">1</button>
-                        <button type="button" class="btn btn-outline-secondary px-2" disabled><i class="bi bi-chevron-right"></i></button>
-                    </div>
                 </div>
             </div>
 

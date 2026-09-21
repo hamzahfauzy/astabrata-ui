@@ -48,8 +48,8 @@ export default [
         name:'profile-edit',
         icon: 'bi bi-pencil',
         permissions: ['desa'],
-        route: '/kpm/profile-edit',
-        activeState: '/kpm/profile-edit',
+        route: '/kpm/profile-revision',
+        activeState: '/kpm/profile-revision',
         children: []
     },
     {
@@ -125,8 +125,8 @@ export default [
         name:'profile',
         icon: 'bi bi-people-fill',
         permissions: ['kecamatan'],
-        route: '/kpm/profile-nominative',
-        activeState: '/kpm/profile-nominative',
+        route: '/kpm/profile-nominatif',
+        activeState: '/kpm/profile-nominatif',
         children: []
     },
     {

@@ -55,7 +55,7 @@ export default {
                 "name": "results",
                 "label": "Hasil",
                 "type": "radio",
-                "options": ["Sesuai", "Belum Sesuai"]
+                "options": ["Sesuai", "Belum Sesuai","Jadwalkan Kunjungan"]
               },
               {
                 "name": "notes",
