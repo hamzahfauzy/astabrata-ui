@@ -129,6 +129,10 @@
         font-weight: 600;
         display: inline-block;
     }
+    .badge-success-soft {
+        background-color: var(--green-bg);
+        color: var(--green-primary);
+    }
     .badge-warning-soft {
         background-color: var(--amber-bg);
         color: var(--amber-primary);
@@ -281,7 +285,7 @@
                 </div>
                 <div>
                     <div class="metric-title">Total Profil</div>
-                    <div class="metric-value">12</div>
+                    <div class="metric-value">{{data.totalProfile}}</div>
                 </div>
             </div>
         </div>
@@ -293,7 +297,7 @@
                 </div>
                 <div>
                     <div class="metric-title">Draf</div>
-                    <div class="metric-value">3</div>
+                    <div class="metric-value">{{data.totalProfileDraft}}</div>
                 </div>
             </div>
         </div>
@@ -305,7 +309,7 @@
                 </div>
                 <div>
                     <div class="metric-title">Menunggu Verifikasi</div>
-                    <div class="metric-value">7</div>
+                    <div class="metric-value">{{data.totalProfileWait}}</div>
                 </div>
             </div>
         </div>
@@ -317,7 +321,7 @@
                 </div>
                 <div>
                     <div class="metric-title">Perlu Perbaikan</div>
-                    <div class="metric-value">2</div>
+                    <div class="metric-value">{{data.totalProfileRevision}}</div>
                 </div>
             </div>
         </div>
@@ -361,9 +365,9 @@
                 <!-- Table Header & Action -->
                 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
                     <h6 class="fw-bold mb-0" style="color: #0f172a;">Daftar Profil Awal KPM Potensial Graduasi</h6>
-                    <button class="btn btn-add-kpm d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#modalTambahKPM">
+                    <a href="/kpm/profiles/create" class="btn btn-add-kpm d-flex align-items-center justify-content-center gap-2" router-link>
                         <i class="bi bi-plus-lg"></i> Tambah Profil KPM
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Search Input -->
@@ -382,74 +386,54 @@
                                 <th>NIK</th>
                                 <th>Desa/Kelurahan</th>
                                 <th>Status</th>
-                                <th style="min-width: 110px;">Kelengkapan</th>
+                                <!-- <th style="min-width: 110px;">Kelengkapan</th> -->
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Row 1 -->
+                             @for(const profile of data.profiles)
                             <tr>
-                                <td class="fw-medium">AST-DS-0001</td>
-                                <td class="fw-bold">SUGOYONO</td>
-                                <td>1209********0002</td>
-                                <td>SIUMBUT UMBUT</td>
+                                <td class="fw-medium">AST-DS-{{profile.id}}</td>
+                                <td class="fw-bold">{{profile.name}}</td>
+                                <td>{{profile.personal_number}}</td>
+                                <td>{{profile.village}}</td>
                                 <td>
+                                    @if(profile.stage == 'stage_1')
+                                    @if(profile.status == 'Menunggu Verifikasi')
                                     <span class="status-badge badge-warning-soft">Menunggu Verifikasi</span>
+                                    @elseif(profile.status == 'Draft')
+                                    <span class="status-badge badge-info-soft">Draf</span>
+                                    @elseif(profile.status == 'Revisi')
+                                    <span class="status-badge badge-danger-soft">Perlu Perbaikan</span>
+                                    @endif
+                                    @else
+                                    <span class="status-badge badge-success-soft">Sudah Verifikasi</span>
+                                    @endif
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="small fw-semibold">100%</span>
                                     </div>
                                     <div class="progress custom-progress mt-1">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                </td>
+                                </td> -->
                                 <td class="text-center">
-                                    <button class="btn btn-action-outline">Lihat</button>
+                                    @if(profile.stage == 'stage_1')
+                                    @if(profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-outline">Lihat</a>
+                                    @elseif(profile.status == 'Draft')
+                                    <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-blue">Lengkapi</a>
+                                    @elseif(profile.status == 'Revisi')
+                                    <a href="/kpm/profiles/{{profile.id}}/edit" class="btn btn-action-red">Perbaiki</a>
+                                    @endif
+                                    @else
+                                    -
+                                    @endif
                                 </td>
                             </tr>
-                            <!-- Row 2 -->
-                            <tr>
-                                <td class="fw-medium">AST-DS-0002</td>
-                                <td class="fw-bold">MAHMILUDDIN</td>
-                                <td>1209********0001</td>
-                                <td>ASAHAN MATI</td>
-                                <td>
-                                    <span class="status-badge badge-info-soft">Draf</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="small fw-semibold">75%</span>
-                                    </div>
-                                    <div class="progress custom-progress mt-1">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-action-blue">Lengkapi</button>
-                                </td>
-                            </tr>
-                            <!-- Row 3 -->
-                            <tr>
-                                <td class="fw-medium">AST-DS-0003</td>
-                                <td class="fw-bold">SRI WAHYUNI</td>
-                                <td>1209********0015</td>
-                                <td>GAJAH</td>
-                                <td>
-                                    <span class="status-badge badge-danger-soft">Perlu Perbaikan</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="small fw-semibold">90%</span>
-                                    </div>
-                                    <div class="progress custom-progress mt-1">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-action-red">Perbaiki</button>
-                                </td>
-                            </tr>
+                            @endfor
                         </tbody>
                     </table>
                 </div>
@@ -504,36 +488,4 @@
         </div>
     </div>
 
-</div>
-
-<!-- Modal Tambah Profil KPM -->
-<div class="modal fade" id="modalTambahKPM" tabindex="-1" aria-labelledby="modalTambahKPMLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="modalTambahKPMLabel">Tambah Profil KPM</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formKPM">
-                    <div class="mb-3">
-                        <label class="form-label font-medium small">Nama KPM</label>
-                        <input type="text" class="form-control" id="inputNama" required placeholder="Masukkan Nama Lengkap">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label font-medium small">NIK</label>
-                        <input type="text" class="form-control" id="inputNik" required placeholder="Masukkan 16 Digit NIK">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label font-medium small">Desa / Kelurahan</label>
-                        <input type="text" class="form-control" id="inputDesa" required placeholder="Masukkan Nama Desa/Kelurahan">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-success px-4" onclick="tambahDataKPM()">Simpan</button>
-            </div>
-        </div>
-    </div>
 </div>

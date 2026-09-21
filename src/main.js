@@ -10,6 +10,7 @@ import Breadcrumb from './components/Breadcrumb.js';
 import view from './core/view.js';
 import { doLogout, isRouteActive, setSideMenuActive, filterAction, isAllowed } from './libs/functions.js';
 import { apiUrl } from './config/env.js';
+import Dashboard from './components/Dashboard.js';
 
 Http.defaults.baseURL = apiUrl;
 
@@ -32,6 +33,7 @@ app.provide('menus', menu)
 app.component('vtp-input', Input)
 app.component('vtp-action', Action)
 app.component('breadcrumb', Breadcrumb)
+app.component('vtp-dashboard', Dashboard)
 app.component('vtp-notification', e => {
     return view.render('components/notification')
 })

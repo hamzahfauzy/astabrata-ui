@@ -192,6 +192,13 @@ export default class ProfileController extends CrudController {
 
                 const formData = new FormData(e.currentTarget)
 
+                if (e.submitter?.name) {
+                    formData.set(
+                        e.submitter.name,
+                        e.submitter.value
+                    );
+                }
+
                 await ctx.http.post(ctx.state.endpoint, formData)
 
                 ctx.flash("success", "Data created.");
@@ -233,7 +240,7 @@ export default class ProfileController extends CrudController {
                     },
                     required: true
                 },
-                {name: 'periods[family_dependant_number]', label: 'Jumlah Tanggungan dalam Keluarga', type: 'number', required: true, attr: {min:0}},
+                {name: 'periods[family_dependent_number]', label: 'Jumlah Tanggungan dalam Keluarga', type: 'number', required: true, attr: {min:0}},
                 {name: 'periods[social_assistance_type]', label: 'Jenis Bansos yang Diterima dari Pemerintah dan Non Pemerintah', type: 'text', required: true},
                 {name: 'periods[business_assistance_type]', label: 'Jenis Bantuan Usaha yang pernah atau sedang diterima', type: 'text', required: true},
                 {
@@ -264,7 +271,7 @@ export default class ProfileController extends CrudController {
                 {name: 'business[product]', label: 'Produk Usaha', type: 'text'},
                 {name: 'business[manager]', label: 'Pengelola Usaha', type: 'text'},
                 {
-                    name: 'business[is_location_in_home]', label: 'Lokasi Usaha jadi Satu denga Rumah', 
+                    name: 'business[is_location_in_home]', label: 'Lokasi Usaha jadi Satu dengan Rumah', 
                     type: 'select',
                     options: [
                         {label: 'Ya', value: 'Ya'},

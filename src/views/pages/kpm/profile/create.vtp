@@ -189,6 +189,7 @@
         </div>
     </div>
 
-    <a href="{{ baseUrl }}" class="btn btn-normal btn-secondary" router-link>Cancel</a>
-    <button class="btn btn-normal btn-primary">Submit</button>
+    <a href="{{ baseUrl }}" class="btn btn-normal btn-secondary" router-link>Batal</a>
+    <button class="btn btn-normal btn-primary" name="periods[status]" value="Menuggu Verifikasi">Usulkan</button>
+    <button class="btn btn-normal btn-warning" name="periods[status]" value="Draft">Simpan Sebagai Draft</button>
 </form>
