@@ -17,7 +17,7 @@ export default class Router {
 
         if (!matched) {
 
-            document.getElementById("app").innerHTML = "<h1>404</h1>";
+            document.querySelector("[data-vtprouter]").innerHTML = "<h1>Error 404. Not Found!</h1>";
 
             return;
 
@@ -27,7 +27,7 @@ export default class Router {
         const params = matched.params;
 
         if (!route) {
-            document.getElementById("app").innerHTML = "<h1>404</h1>";
+            document.querySelector("[data-vtprouter]").innerHTML = "<h1>Error 404. Not Found!</h1>";
             return;
         }
 
@@ -100,6 +100,7 @@ export default class Router {
 
         window.addEventListener("popstate", () => {
             this.load();
+            this.app.refresh('vtp-sidebar')
         });
 
         document.addEventListener("click", (e) => {
