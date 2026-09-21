@@ -136,6 +136,10 @@ Route.add('/kpm/profiles', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Profil KPM'
 }, ['Kpm/ProfileController','index'])
 
+Route.add('/kpm/profile-documents', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Dokumen'
+}, ['Kpm/ProfileDocumentController','index'])
+
 Route.add('/kpm/profiles/create', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Input Data Profil KPM'
 }, ['Kpm/ProfileController','create'])

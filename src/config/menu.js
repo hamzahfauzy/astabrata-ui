@@ -58,7 +58,7 @@ export default [
         icon: 'bi bi-files',
         permissions: ['desa'],
         route: '/kpm/profile-documents',
-        activeState: '/kpm/profile-document',
+        activeState: '/kpm/profile-documents',
         children: []
     },
 
