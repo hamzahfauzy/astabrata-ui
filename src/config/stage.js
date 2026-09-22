@@ -638,7 +638,7 @@ export default {
 
     {
       "id": "stage_9",
-      "permission": "kpm.stage_9",
+      "permission": "dinsos",
       "form": {
         "sections": [
           {

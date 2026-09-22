@@ -361,8 +361,8 @@
                                     <div class="fw-bold">{{profile.name}}</div>
                                     <div class="nik-sub">NIK: {{profile.personal_number}}</div>
                                 </td>
-                                <td>{{profile.village}}</td>
-                                <td>18 Sep 2026</td>
+                                <td class="text-nowrap">{{profile.village}}</td>
+                                <td class="text-nowrap">{{profile.period_created}}</td>
                                 <!-- <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="progress progress-custom w-100">
@@ -371,18 +371,18 @@
                                         <span class="fw-semibold text-secondary" style="font-size: 0.8rem;">100%</span>
                                     </div>
                                 </td> -->
-                                <td>
+                                <td class="text-nowrap">
                                     @if(profile.status == 'Menunggu Verifikasi')
                                     <span class="badge-status badge-blue">Perlu Diverifikasi</span>
                                     @elseif(profile.status == 'Jadwalkan Kunjungan')
                                     <span class="badge-status badge-yellow">Jadwal Kunjungan</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="text-nowrap">
                                     @if(profile.status == 'Menunggu Verifikasi')
-                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-primary text-nowrap">Buka Verifikasi</a>
+                                    <a href="/kpm/profiles/{{profile.id}}/verif" router-link class="btn btn-action-primary text-nowrap">Buka Verifikasi</a>
                                     @elseif(profile.status == 'Jadwalkan Kunjungan')
-                                    <a href="/kpm/profiles/{{profile.id}}" class="btn btn-action-primary text-nowrap">Lihat Jadwal</a>
+                                    <a href="/kpm/profiles/{{profile.id}}/see-schedule" router-link class="btn btn-action-primary text-nowrap">Lihat Jadwal</a>
                                     @endif
                                 </td>
                             </tr>

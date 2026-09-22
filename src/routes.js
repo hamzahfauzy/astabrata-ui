@@ -196,6 +196,10 @@ Route.add('/kpm/profiles/:id', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Detail Profil KPM'
 }, ['Kpm/ProfileController','show'])
 
+Route.add('/kpm/profiles/:id/:action', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Detail Profil KPM'
+}, ['Kpm/ProfileController','show'])
+
 Route.add('/monev', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Monitoring'
 }, ['IndexController','monev'])

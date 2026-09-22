@@ -399,21 +399,27 @@
                                     <span class="badge-soft badge-soft-blue">Dalam Proses</span>
                                     @elseif(profile.stage_name == 'stage_4' && profile.stage_result == 'Memenuhi Kriteria Mandiri')
                                     <span class="badge-soft badge-soft-green">Selesai</span>
+                                    @else
+                                    <span class="badge-soft badge-soft-gray">Belum Penilaian</span>
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(profile.stage_name == 'stage_4')
                                     @if(profile.stage_data.results == 'Memenuhi Kriteria Mandiri')
                                     <span class="badge-soft badge-soft-green">{{profile.stage_data.results}}</span>
-                                    @else
+                                    @elseif(profile.stage_result != 'process')
                                     <span class="badge-soft badge-soft-gray">{{profile.stage_data.results}}</span>
+                                    @else
+                                    <span class="badge-soft badge-soft-yellow">Belum Disimpulkan</span>
                                     @endif
                                     @else
                                     <span class="badge-soft badge-soft-yellow">Belum Disimpulkan</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-primary btn-table-action">Lanjutkan</button>
+                                    @if(profile.stage == 'stage_4' && profile.status == 'Menunggu Verifikasi')
+                                    <a href="/kpm/profiles/{{profile.id}}/assessment" router-link class="btn btn-primary btn-table-action">Nilai</a>
+                                    @endif
                                 </td>
                             </tr>
                             @endfor

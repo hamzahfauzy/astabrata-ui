@@ -33,48 +33,68 @@ export default class ProfileController extends CrudController {
             createLabel: 'Input Data Profil KPM',
             breadcrumbs: [],
             columns: [
-                {label: 'No. KK', key: 'family_number'},
-                {label: 'NIK', key: 'personal_number'},
-                {label: 'Nama', key: 'name'},
+                {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
             ],
             filters: [],
             actions: [
                 {
-                    label: 'View', type: 'link', 
+                    label: 'Detail', type: 'link', 
                     url: row => { return '/kpm/profiles/' + row.id }, 
                     class: '',
-                    permissions: ['profiles.view','desa'],
+                    condition: row => !(row.stage == 'stage_3' && row.status == 'Menunggu Verifikasi'),
+                    permissions: ['profiles.view','desa','dinsos'],
+                },
+                {
+                    label: 'Detail', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    condition: row => !(row.stage == 'stage_5' && row.status == 'Menunggu Verifikasi'),
+                    permissions: ['opd'],
                 },
                 {
                     label: 'Periksa Data', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id + '/check' }, 
+                    class: '',
+                    condition: row => {
+                        return row.stage == 'stage_1' && row.status == 'Menunggu Verifikasi'  
+                    },
+                    permissions: ['pendamping'],
+                },
+                {
+                    label: 'Detail', type: 'link', 
                     url: row => { return '/kpm/profiles/' + row.id }, 
                     class: '',
+                    condition: row => !(row.stage == 'stage_1' && row.status == 'Menunggu Verifikasi'),
                     permissions: ['pendamping'],
                 },
                 {
                     label: 'Pemeriksaan Administrasi', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id + '/check' }, 
+                    class: '',
+                    condition: row => row.stage == 'stage_2' && row.status == 'Menunggu Verifikasi',
+                    permissions: ['kecamatan'],
+                },
+                {
+                    label: 'Detail', type: 'link', 
                     url: row => { return '/kpm/profiles/' + row.id }, 
                     class: '',
+                    condition: row => !(row.stage == 'stage_2' && row.status == 'Menunggu Verifikasi'),
                     permissions: ['kecamatan'],
                 },
                 {
                     label: 'Telaah Data', type: 'link', 
-                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    url: row => { return '/kpm/profiles/' + row.id + '/telaah' }, 
                     class: '',
+                    condition: row => {
+                        return row.stage == 'stage_3' && row.status == 'Menunggu Verifikasi'  
+                    },
                     permissions: ['dinsos'],
                 },
                 {
-                    label: 'Realisasi Intervensi', type: 'link', 
-                    url: row => { return '/kpm/profiles/' + row.id }, 
-                    class: '',
-                    condition: row => {
-                        return row.stage == 'stage_6' && row.status == 'Menunggu Verifikasi'  
-                    },
-                    permissions: ['opd'],
-                },
-                {
                     label: 'Telaah Kebutuhan', type: 'link', 
-                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    url: row => { return '/kpm/profiles/' + row.id + '/telaah' }, 
                     class: '',
                     condition: row => {
                         return row.stage == 'stage_5' && row.status == 'Menunggu Verifikasi'
@@ -107,11 +127,7 @@ export default class ProfileController extends CrudController {
             ],
             title: 'Detail Profil KPM',
             subtitle: 'Data Detail Profil KPM',
-            fields: [
-                {label: 'No. KK', key: 'family_number'},
-                {label: 'NIK', key: 'personal_number'},
-                {label: 'Nama', key: 'name'},
-            ],
+            fields: this.config.list.columns,
         },
         create: {
             title: 'Input Data Profil KPM',
@@ -351,12 +367,13 @@ export default class ProfileController extends CrudController {
             ctx.state = this.config.state
         }
 
+        const action = ctx.params.action ?? false
         const response = await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id)
         const activeStage = stage.stages.find(stage => stage.id == response.data.period_stage)
 
         ctx.onMounted(async () => {
 
-            if(activeStage.id == 'stage_4')
+            if(activeStage.id == 'stage_4' && action)
             {
                 await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id + '/process')
             }
@@ -443,9 +460,17 @@ export default class ProfileController extends CrudController {
 
         const docs = {identity_card: 'KTP', family_card: 'KK', home_image: 'Rumah'}
 
-        
-
-        return await view.render('pages/kpm/profile/detail', {...ctx.state, pageAttr: this.config.view, otherView, baseUrl: this.config.baseUrl, data: response.data, docs, storageUrl, activeStage})
+        return await view.render('pages/kpm/profile/detail', {
+            ...ctx.state, 
+            action,
+            pageAttr: this.config.view, 
+            otherView, 
+            baseUrl: this.config.baseUrl, 
+            data: response.data, 
+            docs, 
+            storageUrl, 
+            activeStage
+        })
 
     }
 
@@ -695,9 +720,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -749,9 +774,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -803,9 +828,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -857,9 +882,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -911,9 +936,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -965,9 +990,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -1019,17 +1044,40 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
                     {
                         label: 'Lakukan Asesmen', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id + '/assessment'}, 
+                        class: '',
+                        condition: row => row.stage == 'stage_3' && row.status == 'Sesuai',
+                        permissions: ['asesor'],
+                    },
+                    // {
+                    //     label: 'Verifikasi', type: 'link', 
+                    //     url: row => { return '/kpm/profiles/' + row.id + '/verification'}, 
+                    //     class: '',
+                    //     condition: row => {
+                    //         return row.stage == 'stage_9' && row.status == 'Menunggu Verifikasi'  
+                    //     },
+                    //     permissions: ['dinsos'],
+                    // },
+                    {
+                        label: 'Detail', type: 'link', 
                         url: row => { return '/kpm/profiles/' + row.id }, 
                         class: '',
-                        permissions: ['dinsos','asesor'],
+                        condition: row => !(row.stage == 'stage_3' && row.status == 'Sesuai'),
+                        permissions: ['asesor'],
+                    },
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['dinsos'],
                     },
                 ],
                 headerActions: [],
@@ -1073,9 +1121,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -1127,16 +1175,19 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
                     {
-                        label: 'Lakukan Intervensi', type: 'link', 
-                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        label: 'Realisasi Intervensi', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id + '/realisasi'}, 
                         class: '',
+                        condition: row => {
+                            return row.stage == 'stage_6' && row.status == 'Menunggu Verifikasi'  
+                        },
                         permissions: ['opd'],
                     },
                 ],
@@ -1181,9 +1232,9 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
@@ -1195,7 +1246,7 @@ export default class ProfileController extends CrudController {
                     },
                     {
                         label: 'Penilaian Ulang', type: 'link', 
-                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        url: row => { return '/kpm/profiles/' + row.id + '/assessment' }, 
                         class: '',
                         condition: row => row.stage == 'stage_7',
                         permissions: ['pelaksana'],
@@ -1249,12 +1300,21 @@ export default class ProfileController extends CrudController {
                 createLabel: '',
                 breadcrumbs: [],
                 columns: [
-                    {label: 'No. KK', key: 'family_number'},
-                    {label: 'NIK', key: 'personal_number'},
-                    {label: 'Nama', key: 'name'},
+                    {label: 'No. KK', key: 'family_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'NIK', key: 'personal_number', cellClass: 'text-secondary font-monospace small'},
+                    {label: 'Nama', key: 'name', cellClass: 'fw-semibold text-dark'},
                 ],
                 filters: [],
                 actions: [
+                    {
+                        label: 'Konfirmasi', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id + '/confirm'}, 
+                        class: '',
+                        condition: row => {
+                            return row.stage == 'stage_8' && row.status == 'Menunggu Verifikasi'
+                        },
+                        permissions: ['desa'],
+                    },
                     {
                         label: 'Detail', type: 'link', 
                         url: row => { return '/kpm/profiles/' + row.id }, 

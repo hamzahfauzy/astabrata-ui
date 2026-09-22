@@ -465,7 +465,7 @@
                                     <th>ID KPM</th>
                                     <th>Nama KPM</th>
                                     <th>Desa/Kelurahan</th>
-                                    <th>Verifikasi Pendamping</th>
+                                    <th class="text-nowrap">Verifikasi Pendamping</th>
                                     <th>Kelengkapan</th>
                                     <th>Duplikasi</th>
                                     <th>Status</th>
@@ -479,23 +479,53 @@
                                     <!-- <td><input class="form-check-input" type="checkbox" checked></td> -->
                                     <td class="fw-medium text-secondary">AST-DS-{{profile.id}}</td>
                                     <td class="fw-bold text-dark">{{profile.name}}</td>
-                                    <td>{{profile.village}}</td>
+                                    <td class="text-nowrap">{{profile.village}}</td>
                                     <td>
+                                        @if((profile.stage_name == 'stage_1' && profile.stage_result == 'Sesuai') || profile.stage_name != 'stage_1')
                                         <span class="badge-verify">
                                             <i class="fa-solid fa-circle-check"></i> Sesuai
                                         </span>
+                                        @else
+                                        <span class="badge-need-fix">
+                                            <i class="fa-solid fa-circle-time"></i> Tidak Sesuai
+                                        </span>
+                                        @endif
                                     </td>
-                                    <td class="fw-semibold">100%</td>
-                                    <td class="text-secondary">Tidak Ada</td>
-                                    <td><span class="badge-status badge-ready">Siap Dipilih</span></td>
+                                    <td class="text-nowrap fw-semibold">
+                                        @if(profile.stage_name != 'stage_2')
+                                        Belum Diperiksa
+                                        @elseif(profile.stage_name == 'stage_2' && profile.stage_data.profile == 'Sesuai')
+                                        100%
+                                        @endif
+                                    </td>
+                                    <td class="text-nowrap text-secondary">
+                                        @if(profile.stage_name != 'stage_2')
+                                        Belum Diperiksa
+                                        @else
+                                        {{profile.stage_data.duplication}}
+                                        @endif
+                                    </td>
+                                    <td class="text-nowrap">
+                                        @if(profile.stage_name == 'stage_1' && profile.stage_data.results == 'Sesuai')
+                                        <span class="badge-status badge-ready">Siap Diperiksa</span>
+                                        @elseif(profile.stage_name == 'stage_1' && profile.stage_data.results == 'Belum Sesuai')
+                                        <span class="badge-status badge-need-fix">Belum Sesuai</span>
+                                        @elseif(profile.stage_name == 'stage_2' && profile.stage_result == 'Sesuai')
+                                        <span class="badge-status badge-ready">Siap Diajukan</span>
+                                        @elseif(profile.stage_name == 'stage_2' && profile.stage_result == 'Diajukan')
+                                        <span class="badge-status badge-ready">Sudah Diajukan</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         <div class="d-flex align-items-center justify-content-center gap-2">
+                                            @if(profile.stage_name == 'stage_1')
+                                            <a href="/kpm/profiles/{{profile.id}}/check" router-link class="btn btn-action-outline">Periksa</a>
+                                            @else
                                             @if(profile.status == 'Belum Sesuai')
                                             <button class="btn btn-action-warning-outline">Kembalikan</button>
                                             @elseif(profile.status == 'Sesuai')
                                             <button class="btn btn-action-outline btn-ajukan" data-rowid="{{profile.id}}">Ajukan</button>
-                                            @else
-                                            <a href="/kpm/profiles/{{profile.id}}" router-link class="btn btn-action-outline">Periksa</a>
+                                            @endif
                                             @endif
                                         </div>
                                     </td>

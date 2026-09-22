@@ -80,12 +80,12 @@
                     @for(const d of data)
                     <tr>
                         @for(const col of list.columns)
-                        <td>{{ col.value ? col.value(d[col.key], d) : d[col.key] }}</td>
+                        <td class="py-3 {{col.cellClass ?? ''}}">{{ col.value ? col.value(d[col.key], d) : d[col.key] }}</td>
                         @endfor
                         <td class="action-col">
-                            @if(filterAction(list.actions).length)
+                            @if(filterAction(list.actions).filter(action => action.condition ? action.condition(d) : true).length)
                             <div class="dropdown datatable-dropdown-action">
-                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+                                <button class="btn btn-light btn-sm rounded-circle text-secondary p-2 shadow-none" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
 

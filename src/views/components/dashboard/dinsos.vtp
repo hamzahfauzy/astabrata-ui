@@ -403,13 +403,13 @@
                                     <tr>
                                         <!-- <th scope="col" style="width: 40px;"><input class="form-check-input" type="checkbox"></th> -->
                                         <th scope="col">ID KPM</th>
-                                        <th scope="col">Nama KPM</th>
-                                        <th scope="col">Kecamatan</th>
-                                        <th scope="col">Desa/Kelurahan</th>
-                                        <th scope="col">DTSEN/Bansos</th>
-                                        <th scope="col">Kelengkapan</th>
-                                        <th scope="col">Duplikasi</th>
-                                        <th scope="col">Hasil Telaah</th>
+                                        <th class="text-nowrap" scope="col">Nama KPM</th>
+                                        <th class="text-nowrap" scope="col">Kecamatan</th>
+                                        <th class="text-nowrap" scope="col">Desa/Kelurahan</th>
+                                        <th class="text-nowrap" scope="col">DTSEN/Bansos</th>
+                                        <th class="text-nowrap" scope="col">Kelengkapan</th>
+                                        <th class="text-nowrap" scope="col">Duplikasi</th>
+                                        <th class="text-nowrap" scope="col">Hasil Telaah</th>
                                         <th scope="col" class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -422,7 +422,7 @@
                                         <td class="fw-bold text-dark" style="font-size: 0.825rem;">{{profile.name}}</td>
                                         <td class="text-uppercase text-secondary" style="font-size: 0.825rem; white-space: nowrap;">{{profile.region}}</td>
                                         <td class="text-uppercase text-secondary" style="font-size: 0.825rem; white-space: nowrap;">{{profile.village}}</td>
-                                        <td>
+                                        <td class="text-nowrap">
                                             @if(profile.stage_data.social_assistance)
                                             <span class="d-inline-flex align-items-center gap-1 {{profile.stage_data.social_assistance == 'Sesuai' ? 'text-success' : 'text-danger'}} fw-bold" style="font-size: 0.8rem;">
                                                 @if(profile.stage_data.social_assistance == 'Sesuai')
@@ -440,10 +440,10 @@
                                         <td class="fw-bold text-dark" style="font-size: 0.825rem;">
                                             {{profile.stage_data.profile == 'Sesuai' ? '100%' : profile.stage_data.profile == 'Sesuai'}}
                                         </td>
-                                        <td class="text-secondary" style="font-size: 0.825rem;">
+                                        <td class="text-secondary text-nowrap" style="font-size: 0.825rem;">
                                             {{profile.stage_data.duplication}}
                                         </td>
-                                        <td>
+                                        <td class="text-nowrap">
                                             @if((profile.stage_name == 'stage_2' && profile.stage_result == 'Sesuai') || (profile.stage_name == 'stage_3' && profile.stage_result == 'Sesuai'))
                                             <span class="badge-custom-success">Lolos</span>
                                             @elseif(profile.stage_result == 'Belum Sesuai')
@@ -459,7 +459,7 @@
                                                 @elseif(profile.stage_result == 'Belum Sesuai')
                                                 <a href="/kpm/profiles/{{profile.id}}" router-link class="btn btn-action-return">Kembalikan</a>
                                                 @else
-                                                <a href="/kpm/profiles/{{profile.id}}" router-link class="btn btn-action-view">Telaah</a>
+                                                <a href="/kpm/profiles/{{profile.id}}/telaah" router-link class="btn btn-action-view">Telaah</a>
                                                 @endif
                                             </div>
                                         </td>

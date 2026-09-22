@@ -176,6 +176,22 @@
             content: " *";
             color: #ef4444;
         }
+
+        .btn-action-outline {
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            border-radius: 6px;
+            padding: 3px 12px;
+            font-size: 0.785rem;
+            font-weight: 500;
+            background: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .btn-action-outline:hover {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
     </style>
     
 
@@ -310,13 +326,13 @@
                         <table class="table table-custom align-middle" id="rujukanTable">
                             <thead>
                                 <tr>
-                                    <th>No. Rujukan</th>
-                                    <th>Nama KPM</th>
-                                    <th>Kebutuhan</th>
-                                    <th>Program/Kegiatan</th>
-                                    <th>Target Waktu</th>
-                                    <th>Status</th>
-                                    <th>Bukti</th>
+                                    <th class="text-nowrap">No. Rujukan</th>
+                                    <th class="text-nowrap">Nama KPM</th>
+                                    <th class="text-nowrap">Kebutuhan</th>
+                                    <th class="text-nowrap">Program/Kegiatan</th>
+                                    <th class="text-nowrap">Target Waktu</th>
+                                    <th class="text-nowrap">Status</th>
+                                    <th class="text-nowrap">Bukti</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -325,12 +341,26 @@
                                 <tr>
                                     <td class="fw-medium text-secondary" style="font-size: 0.825rem;">RJ-2026-{{profile.id}}</td>
                                     <td class="fw-bold text-dark" style="font-size: 0.825rem;">{{profile.name}}</td>
-                                    <td class="text-uppercase text-secondary" style="font-size: 0.825rem; white-space: nowrap;"></td>
-                                    <td class="text-uppercase text-secondary" style="font-size: 0.825rem; white-space: nowrap;"></td>
-                                    <td></td>
-                                    <td class="fw-bold text-dark" style="font-size: 0.825rem;"></td>
+                                    <td class="text-uppercase text-secondary text-nowrap" style="font-size: 0.825rem;">
+                                        {{profile.stage_name == 'stage_5' ? profile.stage_data.analysis : 'Belum Ditelaah'}}
+                                    </td>
+                                    <td class="text-uppercase text-secondary text-nowrap" style="font-size: 0.825rem;">
+                                        {{profile.stage_name == 'stage_5' ? profile.stage_data.program : 'Belum Ditelaah'}}
+                                    </td>
+                                    <td class="text-nowrap">
+                                        {{profile.stage_name == 'stage_5' ? profile.stage_data.schedule : 'Belum Ditelaah'}}
+                                    </td>
+                                    <td class="fw-bold text-dark text-nowrap" style="font-size: 0.825rem;">
+                                        {{profile.stage_name == 'stage_5' ? profile.stage_data.results : 'Belum Ditelaah'}}
+                                    </td>
                                     <td class="text-secondary" style="font-size: 0.825rem;"></td>
-                                    <td></td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-2">
+                                        @if(profile.stage_name != 'stage_5')
+                                        <a href="/kpm/profiles/{{profile.id}}/telaah" router-link class="btn btn-action-outline">Telaah</a>
+                                        @endif
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endfor
 
