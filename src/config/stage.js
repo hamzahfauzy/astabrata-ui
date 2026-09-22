@@ -243,7 +243,7 @@ export default {
 
     {
       "id": "stage_4",
-      "permission": "kpm.stage_4",
+      "permission": ["asesor","dinsos"],
       "form": {
         "sections": [
           {

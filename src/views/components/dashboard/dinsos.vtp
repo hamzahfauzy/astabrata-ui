@@ -465,6 +465,16 @@
                                         </td>
                                     </tr>
                                     @endfor
+
+                                    @if(data.profiles.length == 0)
+                                    <tr>
+                                        <td colspan="9">
+                                            <div class="p-3 text-center">
+                                                <i>Tidak ada data</i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

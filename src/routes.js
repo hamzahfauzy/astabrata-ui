@@ -164,6 +164,10 @@ Route.add('/kpm/profile-target', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Daftar Sasaran'
 }, ['Kpm/ProfileController','targets'])
 
+Route.add('/kpm/profile-assessment', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Daftar Sasaran'
+}, ['Kpm/ProfileController','assessments'])
+
 Route.add('/kpm/profile-documents', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Dokumen'
 }, ['Kpm/ProfileDocumentController','index'])

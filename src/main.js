@@ -29,6 +29,16 @@ app.function('isAllowed', permissions => {
     return isAllowed(permissions, app)
 })
 
+app.function('isStageAllowed', (userPermissions, stagePermission) => {
+    const permissions = Array.isArray(stagePermission)
+        ? stagePermission
+        : [stagePermission];
+
+    return permissions.some(permission =>
+        userPermissions.includes(permission)
+    );
+})
+
 app.provide('menus', menu)
 app.component('vtp-input', Input)
 app.component('vtp-action', Action)

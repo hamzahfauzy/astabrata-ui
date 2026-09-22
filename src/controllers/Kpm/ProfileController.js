@@ -333,7 +333,15 @@ export default class ProfileController extends CrudController {
             ctx.state = this.config.state
         }
 
-        ctx.onMounted(() => {
+        const response = await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id)
+        const activeStage = stage.stages.find(stage => stage.id == response.data.period_stage)
+
+        ctx.onMounted(async () => {
+
+            if(activeStage.id == 'stage_4')
+            {
+                await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id + '/process')
+            }
 
             ctx.on('#stage-form', 'submit', async e => {
                 e.preventDefault()
@@ -342,15 +350,17 @@ export default class ProfileController extends CrudController {
 
                 await ctx.http.post(ctx.state.endpoint + '/' + ctx.params.id + '/stage', formData)
 
-                ctx.flash("success", "Data created.");
+                ctx.flash("success", "Data berhasil disimpan.");
 
-                ctx.redirect(this.config.baseUrl)
+                const baseUrl = activeStage.id == 'stage_4' ? '/kpm/profile-target' : this.config.baseUrl
+
+                ctx.redirect(baseUrl)
 
                 return false;
             })
         })
 
-        const response = await ctx.http.get(ctx.state.endpoint + '/' + ctx.params.id)
+        
 
         const otherView = {
             periods: [
@@ -409,7 +419,7 @@ export default class ProfileController extends CrudController {
 
         const docs = {identity_card: 'KTP', family_card: 'KK', home_image: 'Rumah'}
 
-        const activeStage = stage.stages.find(stage => stage.id == response.data.period_stage)
+        
 
         return await view.render('pages/kpm/profile/detail', {...ctx.state, pageAttr: this.config.view, otherView, baseUrl: this.config.baseUrl, data: response.data, docs, storageUrl, activeStage})
 
@@ -992,10 +1002,64 @@ export default class ProfileController extends CrudController {
                 filters: [],
                 actions: [
                     {
+                        label: 'Lakukan Asesmen', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['dinsos','asesor'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
+    async assessments(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-assessments');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-assessments/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Daftar Asesmen KPM',
+                subtitle: 'Daftar Profil KPM yang telah diasesmen',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
                         label: 'Detail', type: 'link', 
                         url: row => { return '/kpm/profiles/' + row.id }, 
                         class: '',
-                        permissions: ['dinsos'],
+                        permissions: ['dinsos','asesor'],
                     },
                 ],
                 headerActions: [],
