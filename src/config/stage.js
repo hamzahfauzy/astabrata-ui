@@ -358,7 +358,7 @@ export default {
 
     {
       "id": "stage_5",
-      "permission": "kpm.stage_5",
+      "permission": "opd",
       "form": {
         "sections": [
           {
@@ -418,11 +418,11 @@ export default {
 
     {
       "id": "stage_6",
-      "permission": "kpm.stage_6",
+      "permission": "opd",
       "form": {
         "sections": [
           {
-            "label": "Realisasi",
+            "label": "Realisasi Intervensi",
             "fields": [
               {
                 "name": "implementation_date",

@@ -64,6 +64,24 @@ export default class ProfileController extends CrudController {
                     permissions: ['dinsos'],
                 },
                 {
+                    label: 'Realisasi Intervensi', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    condition: row => {
+                        return row.stage == 'stage_6' && row.status == 'Menunggu Verifikasi'  
+                    },
+                    permissions: ['opd'],
+                },
+                {
+                    label: 'Telaah Kebutuhan', type: 'link', 
+                    url: row => { return '/kpm/profiles/' + row.id }, 
+                    class: '',
+                    condition: row => {
+                        return row.stage == 'stage_5' && row.status == 'Menunggu Verifikasi'
+                    },
+                    permissions: ['opd'],
+                },
+                {
                     label: 'Edit', type: 'link', 
                     url: row => { return '/kpm/profiles/' + row.id + '/edit' }, 
                     class: '',
@@ -352,7 +370,12 @@ export default class ProfileController extends CrudController {
 
                 ctx.flash("success", "Data berhasil disimpan.");
 
-                const baseUrl = activeStage.id == 'stage_4' ? '/kpm/profile-target' : this.config.baseUrl
+                const redirector = {
+                    'stage_4': '/kpm/profile-target',
+                    'stage_6': '/kpm/profile-intervence-schedules',
+                }
+
+                const baseUrl = redirector[activeStage.id] ?? this.config.baseUrl
 
                 ctx.redirect(baseUrl)
 
@@ -1060,6 +1083,114 @@ export default class ProfileController extends CrudController {
                         url: row => { return '/kpm/profiles/' + row.id }, 
                         class: '',
                         permissions: ['dinsos','asesor'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
+    async intervenceSchedules(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-intervence-schedules');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-intervence-schedules/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Jadwal Intervensi KPM',
+                subtitle: 'Daftar Profil KPM yang telah dijadwalkan interversi',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
+                        label: 'Lakukan Intervensi', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['opd'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
+    async implementations(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-implementations');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-implementations/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Pelaksanaan',
+                subtitle: 'Daftar Profil KPM yang telah melakukan Intervensi',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['opd'],
                     },
                 ],
                 headerActions: [],

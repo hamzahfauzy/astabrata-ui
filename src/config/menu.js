@@ -271,37 +271,37 @@ export default [
     {
         label: 'Jadwal Intervensi',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-calendar-week',
         permissions: ['opd'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-intervence-schedules',
+        activeState: '/kpm/profile-intervence-schedules',
         children: []
     },
     {
         label: 'Pelaksanaan',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-gear-fill',
         permissions: ['opd'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-implementations',
+        activeState: '/kpm/profile-implementations',
         children: []
     },
     {
         label: 'Bukti Dokumentasi',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-card-image',
         permissions: ['opd'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-evidences',
+        activeState: '/kpm/profile-evidences',
         children: []
     },
     {
         label: 'Tindak Lanjut',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-check-square',
         permissions: ['opd'],
-        route: '/kpm/profiles',
-        activeState: '/kpm/profiles',
+        route: '/kpm/profile-follow-up',
+        activeState: '/kpm/profile-follow-up',
         children: []
     },
 

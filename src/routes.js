@@ -168,6 +168,14 @@ Route.add('/kpm/profile-assessment', 'views/layouts/app', isAuthenticated, () =>
     document.title = 'Daftar Sasaran'
 }, ['Kpm/ProfileController','assessments'])
 
+Route.add('/kpm/profile-intervence-schedules', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Jadwal Intervensi'
+}, ['Kpm/ProfileController','intervenceSchedules'])
+
+Route.add('/kpm/profile-implementations', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Pelaksanaan'
+}, ['Kpm/ProfileController','implementations'])
+
 Route.add('/kpm/profile-documents', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Dokumen'
 }, ['Kpm/ProfileDocumentController','index'])
