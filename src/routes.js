@@ -156,6 +156,14 @@ Route.add('/kpm/profile-nominatif', 'views/layouts/app', isAuthenticated, () => 
     document.title = 'Pemeriksaan Berkas Administrasi'
 }, ['Kpm/ProfileController','nominatif'])
 
+Route.add('/kpm/profile-check', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Penelaahan KPM'
+}, ['Kpm/ProfileController','check'])
+
+Route.add('/kpm/profile-target', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Daftar Sasaran'
+}, ['Kpm/ProfileController','targets'])
+
 Route.add('/kpm/profile-documents', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Dokumen'
 }, ['Kpm/ProfileDocumentController','index'])

@@ -493,7 +493,7 @@
                                             @if(profile.status == 'Belum Sesuai')
                                             <button class="btn btn-action-warning-outline">Kembalikan</button>
                                             @elseif(profile.status == 'Sesuai')
-                                            <button class="btn btn-action-outline">Usulkan</button>
+                                            <button class="btn btn-action-outline btn-ajukan" data-rowid="{{profile.id}}">Ajukan</button>
                                             @else
                                             <a href="/kpm/profiles/{{profile.id}}" router-link class="btn btn-action-outline">Periksa</a>
                                             @endif

@@ -896,6 +896,114 @@ export default class ProfileController extends CrudController {
 
     }
 
+    async check(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-check');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-check/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Daftar Penelaahan KPM',
+                subtitle: 'Daftar Profil KPM yang telah Ditelaah',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['dinsos'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
+    async targets(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-target');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-target/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Daftar Sasaran KPM',
+                subtitle: 'Daftar Profil KPM yang menjadi Sasaran',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['dinsos'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
     async loadFilteredData(ctx, endpoint){
         ctx.state.query.search = ctx.query.search ?? ''
         ctx.state.query.page = ctx.query.page ?? 1

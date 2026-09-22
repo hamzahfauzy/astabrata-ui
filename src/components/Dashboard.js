@@ -19,6 +19,29 @@ export default async function (props, ctx) {
     else if(userData.roles.map(role => role.name).includes('Kecamatan'))
     {
         compName = 'kecamatan'
+
+        ctx.onMounted(() => {
+            ctx.on('.btn-ajukan', 'click', e => {
+                const el = e.currentTarget
+                const id = el.dataset.rowid
+                
+                Swal.fire({
+                    title: "Konfirmasi",
+                    text: "Apakah anda yakin akan mengajukan data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed)
+                    {
+                        await ctx.http.get('/kpm/profiles/' + id + '/ajukan')
+                        Swal.fire("Data berhasil diajukan!", "", "success");
+                        ctx.refresh()
+                    }
+                });
+            })
+        })
     }
     else if(userData.roles.map(role => role.name).includes('Dinsos'))
     {
