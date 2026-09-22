@@ -483,7 +483,7 @@ export default {
 
     {
       "id": "stage_7",
-      "permission": "kpm.stage_7",
+      "permission": "pelaksana",
       "form": {
         "sections": [
           {
@@ -536,12 +536,6 @@ export default {
                 "type": "radio",
                 "options": ["Sesuai", "Tidak Sesuai"]
               },
-              {
-                "name": "need_verification",
-                "label": "Keberlanjutan Usaha",
-                "type": "radio",
-                "options": ["Ya", "Tidak"]
-              }
             ]
           },
           {
@@ -580,7 +574,7 @@ export default {
 
     {
       "id": "stage_8",
-      "permission": "kpm.stage_8",
+      "permission": "desa",
       "form": {
         "sections": [
           {

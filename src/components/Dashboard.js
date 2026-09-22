@@ -55,6 +55,14 @@ export default async function (props, ctx) {
     {
         compName = 'asesor'
     }
+    else if(userData.roles.map(role => role.name).includes('Tim Pelaksana'))
+    {
+        compName = 'pelaksana'
+    }
+    else if(userData.roles.map(role => role.name).includes('Tim Teknis'))
+    {
+        compName = 'teknis'
+    }
     
     return view.render('components/dashboard/' + compName, {
         data: response.data

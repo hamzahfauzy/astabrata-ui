@@ -373,6 +373,7 @@ export default class ProfileController extends CrudController {
                 const redirector = {
                     'stage_4': '/kpm/profile-target',
                     'stage_6': '/kpm/profile-intervence-schedules',
+                    'stage_7': '/kpm/profile-implementations',
                 }
 
                 const baseUrl = redirector[activeStage.id] ?? this.config.baseUrl
@@ -1191,6 +1192,74 @@ export default class ProfileController extends CrudController {
                         url: row => { return '/kpm/profiles/' + row.id }, 
                         class: '',
                         permissions: ['opd'],
+                    },
+                    {
+                        label: 'Penilaian Ulang', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        condition: row => row.stage == 'stage_7',
+                        permissions: ['pelaksana'],
+                    },
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        condition: row => row.stage != 'stage_7',
+                        permissions: ['pelaksana'],
+                    },
+                ],
+                headerActions: [],
+            }
+        })
+
+    }
+
+    async recommendations(ctx){
+    
+        if(!ctx.state)
+        {
+            ctx.state = this.config.state
+            ctx.state.success = ctx.flash("success");
+        }
+
+        ctx.onMounted(() => {
+
+            if(!ctx.state.loaded) {
+                ctx.state.loaded = true;
+                this.loadFilteredData(ctx, '/kpm/profile-recommendations');
+            }
+
+            ctx.on('#searchForm', 'submit', e => {
+                e.preventDefault()
+
+                const search = document.querySelector('input[name=search]').value
+
+                ctx.redirect('/kpm/profile-recommendations/?search=' + search)
+
+                return false;
+            })
+        })
+
+        return await view.render('crud/index', {
+            ...ctx.state, 
+            baseUrl: this.config.baseUrl, 
+            list: {
+                title: 'Rekomendasi Graduasi',
+                subtitle: 'Daftar Profil KPM yang telah mendapatkan rekomendasi graduasi',
+                createLabel: '',
+                breadcrumbs: [],
+                columns: [
+                    {label: 'No. KK', key: 'family_number'},
+                    {label: 'NIK', key: 'personal_number'},
+                    {label: 'Nama', key: 'name'},
+                ],
+                filters: [],
+                actions: [
+                    {
+                        label: 'Detail', type: 'link', 
+                        url: row => { return '/kpm/profiles/' + row.id }, 
+                        class: '',
+                        permissions: ['desa'],
                     },
                 ],
                 headerActions: [],

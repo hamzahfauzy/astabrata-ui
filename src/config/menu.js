@@ -3,7 +3,7 @@ export default [
         label: 'Dashboard',
         name:'',
         icon: 'bi bi-grid',
-        permissions: ['dashboard.index','desa','pendamping','opd','dinsos','kecamatan','kabupaten','asesor'],
+        permissions: ['dashboard.index','desa','pendamping','opd','dinsos','kecamatan','kabupaten','asesor','pelaksana','teknis'],
         route: '/',
         activeState: '/',
         children: []
@@ -50,6 +50,15 @@ export default [
         permissions: ['desa'],
         route: '/kpm/profile-revision',
         activeState: '/kpm/profile-revision',
+        children: []
+    },
+    {
+        label: 'Rekomendasi Graduasi',
+        name:'graduasi',
+        icon: 'bi bi-check-square',
+        permissions: ['desa'],
+        route: '/kpm/profile-recommendations',
+        activeState: '/kpm/profile-recommendations',
         children: []
     },
     {
@@ -179,7 +188,7 @@ export default [
     {
         label: 'Asesmen',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-clipboard-data',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/kpm/profile-assessment',
         activeState: '/kpm/profile-assessment',
@@ -197,7 +206,7 @@ export default [
     {
         label: 'RII',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-bar-chart-fill',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/rii',
         activeState: '/rii',
@@ -206,7 +215,7 @@ export default [
     {
         label: 'Rujukan dan Intervensi',
         name:'profile',
-        icon: 'bi bi-people-fill',
+        icon: 'bi bi-pie-chart-fill',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/rujukan-intervensi',
         activeState: '/rujukan-intervensi',
@@ -215,7 +224,7 @@ export default [
     {
         label: 'Monitoring dan Evaluasi',
         name:'profile-document',
-        icon: 'bi bi-files',
+        icon: 'bi bi-graph-down',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/monev',
         activeState: '/monev',
@@ -233,7 +242,7 @@ export default [
     {
         label: 'Graduasi',
         name:'profile-document',
-        icon: 'bi bi-files',
+        icon: 'bi bi-trophy',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/graduasi',
         activeState: '/graduasi',
@@ -242,7 +251,7 @@ export default [
     {
         label: 'UEP',
         name:'profile-document',
-        icon: 'bi bi-files',
+        icon: 'bi bi-database',
         permissions: ['dinsos','asesor','kabupaten'],
         route: '/uep',
         activeState: '/uep',
@@ -251,7 +260,7 @@ export default [
     {
         label: 'Pasca Graduasi',
         name:'profile-document',
-        icon: 'bi bi-files',
+        icon: 'bi bi-people',
         permissions: ['dinsos','kabupaten'],
         route: '/pasca-graduasi',
         activeState: '/pasca-graduasi',
@@ -281,7 +290,7 @@ export default [
         label: 'Pelaksanaan',
         name:'profile',
         icon: 'bi bi-gear-fill',
-        permissions: ['opd'],
+        permissions: ['opd','pelaksana'],
         route: '/kpm/profile-implementations',
         activeState: '/kpm/profile-implementations',
         children: []

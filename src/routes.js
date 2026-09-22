@@ -136,6 +136,10 @@ Route.add('/kpm/profiles', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Profil KPM'
 }, ['Kpm/ProfileController','index'])
 
+Route.add('/kpm/profile-recommendations', 'views/layouts/app', isAuthenticated, () => {
+    document.title = 'Rekomendasi Graduasi'
+}, ['Kpm/ProfileController','recommendations'])
+
 Route.add('/kpm/profile-revision', 'views/layouts/app', isAuthenticated, () => {
     document.title = 'Perbaikan Data'
 }, ['Kpm/ProfileController','revision'])
